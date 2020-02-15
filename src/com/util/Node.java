@@ -1,47 +1,47 @@
 package com.util;
 
 import java.util.ArrayList;
-import java.util.function.Function;
-
-import com.run.Execute;
 
 public class Node {
-	public ArrayList<Edge> inputEdges;
+    	public ArrayList<Edge> inputEdges;
 	public float bias, answer;
+	public boolean isInput, isOutput;
 	
 	private boolean finished = false;
+	private Activation.Function activation;
 	
-	public Node(ArrayList<Edge> inputEdges, float bias, boolean inputLayer) {
-		inputEdges = new ArrayList<>();
-		this.inputEdges = inputEdges;
-		this.bias = bias;
-		finished = inputLayer;
+	public Node(ArrayList<Edge> inputEdges, float bias, Activation.Function activation, boolean isInputNode, boolean isOutputNode) {
+	    //constructor: set the input edges of a node, set default bias, set input node or output node mode
+	    inputEdges = new ArrayList<>();
+	    this.inputEdges = inputEdges;
+	    this.bias = bias;
+	    this.activation = activation;
+	    finished = isInputNode; //apply input characteristic
+	    this.isInput = isInputNode;
+	    isOutput = isInputNode?false:isOutputNode; //false proving the output characteristic
 	}
 	
-	public void resetNode() {
+	public void resetNode() { //set output to 0, and finished (latch) to false
 		answer = 0;
 		finished = false;
 	}
 	
-	public void updateBias(float bias) {
+	public void updateBias(float bias) { //update the bias for training
 		this.bias = bias;
 	}
 	
-	public void calculate(Activation function) {
+	public void calculate() { //calculate the ouptut based on the input
 		float ans = bias;
 		for(Edge e : inputEdges) {
 			ans += e.weight * e.start.answer;
 		}
-//		answer = activation.apply(ans);
-//		answer = Execute.test.process(ans);
-		answer = function.activate(ans);
 		
+		//calculate activation
+		answer = activation.activate(ans);
 		finished = true;
 	}
-
 	
-	
-	public boolean isFinished() {
+	public boolean isFinished() { //update the isfinished mode (latch)
 		return finished;
 	}
 }

@@ -12,7 +12,5 @@ public class Edge {
 	
 	public void updateWeight(float weight) {
 		this.weight = weight;
-	}
-	
-	
+	}	
 }

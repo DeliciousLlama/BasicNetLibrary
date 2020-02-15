@@ -1,6 +1,7 @@
 package com.run;
 
 import com.util.Activation;
+import com.util.InvalidStructureException;
 import com.util.NeuralNetwork;
 import com.util.Node;
 
@@ -17,15 +18,24 @@ public class Execute {
 		//define activation
 		
 //		Activation function = x -> {return x;};
-		Activation function = x -> {return (float) (1/1+Math.pow(Math.E, -x));};
 		NeuralNetwork net = new NeuralNetwork();
-		net.buildInput(10);
-		net.buildOutput(8);
+		net.buildInput(3);
+		net.addHidden(60, Activation.identity);
+		net.addHidden(100, Activation.identity);
+		net.addHidden(70, Activation.identity);
+		net.buildOutput(2, Activation.identity);
+		
 		ArrayList<Float> inputs = new ArrayList<>();
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 3; i++) {
 			inputs.add((float) (0 + Math.random() * (10 - 0)));
 		}
-		net.computeNetwork(inputs, function);
+		
+		try {
+			net.compileNetwork();
+		} catch (InvalidStructureException e) {
+			e.printStackTrace();
+		}
+		net.computeNetwork(inputs);
 		
 		System.out.println("Mode: Testing / NeuralNet ID: ["+net.toString()+"]\n----------");
 		System.out.println("Output nodes:\nbias\t|\toutput(dec)\n=====");
