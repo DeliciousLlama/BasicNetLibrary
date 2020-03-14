@@ -1,22 +1,42 @@
 package com.util;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.function.Function;
-
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.MaximizeAction;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class NeuralNetwork{
 	private ArrayList<Node> inputLayer;
 	private ArrayList<Node> outputLayer;
 	public ArrayList<Edge> mainEdgeStructure;
 	public ArrayList <ArrayList<Node>> mainNodeStructure;
+	public Map<ArrayList<Float>, ArrayList<Float>> dataSet;
 	
-	public NeuralNetwork() { //constructor
+	public NeuralNetwork(ArrayList<ArrayList<Float>> inputs, ArrayList<ArrayList<Float>> outputs) { //constructor
 		inputLayer = new ArrayList<>();
 		outputLayer = new ArrayList<>();
 		mainEdgeStructure = new ArrayList<>();
 		mainNodeStructure = new ArrayList<>();
+		//check length security
+		if (inputs.size() != outputs.size()){
+			System.err.println("WARNING: Given INPUT size contradicts OUTPUT size. Output will be trimmed to Input size!");
+		}
+		System.out.println("Data initialization will start in 5 seconds...");
+		try {
+			TimeUnit.SECONDS.sleep(5);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		dataSet = new HashMap<>();
+		
+		//start initialization of data
+		for(int i = 0; i < inputs.size(); i++) {
+			dataSet.put(inputs.get(i), outputs.get(i));
+		}
 	}
 	
 	public void reset() { //used in the beginning of running, and reset all the output to 0 and finished to false
@@ -95,18 +115,61 @@ public class NeuralNetwork{
 		}
 	}
 	
-	public void computeNetwork(ArrayList<Float> inputs) {
+	public ArrayList<Float> computeNetwork(ArrayList<Float> inputs) {
 		setInput(inputs);
 		for(int i = 1; i < mainNodeStructure.size(); i++) {
 			for(Node n : mainNodeStructure.get(i)) {
 				n.calculate();
 			}
 		}
+		ArrayList<Float> ans = new ArrayList<>();
+		for(Node n : mainNodeStructure.get(mainNodeStructure.size()-1)) {
+			ans.add(n.answer);
+		}
+		return ans;
 	}
 	
-	private float train(int epochs) {
+	private float getError(ArrayList<Float> answerData, ArrayList<Float> outputData) {
+		//compute all the answer data
+		float error = 0;
+		int i = 0;
+		//sqrt(A1^2 - O1^2) + sqrt(A2^2 - O2^2)
+		for(float answer : answerData) {
+			error += (float)(Math.pow(answer, 2) - Math.pow(outputData.get(i), 2));
+			i++;
+		}
+		return (float) Math.sqrt(error);
+	}
+	
+	public float train(int epochs) {
+		//run all the inputs and compute the error
+		for(int a = 0; a < epochs; a++) {
+			//0. scramble data	(done)
+			//1. compute		(done)
+			//2. get error		(done)
+			//3. modify			(In Progress)
+			
+			//scramble
+			ArrayList<ArrayList<Float>> inputSets = new ArrayList<>();
+			inputSets.addAll(dataSet.keySet());
+			Collections.shuffle(inputSets);
+			
+			//compute + get error
+			ArrayList<ArrayList<Float>> computedAnswers = new ArrayList<ArrayList<Float>>();
+			ArrayList<Float> errors = new ArrayList<Float>();
+			
+			for(ArrayList<Float> input : inputSets) {
+				ArrayList<Float> outputData = computeNetwork(input);
+				computedAnswers.add(outputData);
+				errors.add(getError(input, outputData));
+			}
+			
+			
+		}
 		return 0;
 	}
+	
+	@SuppressWarnings("unused")
 	private float test(NeuralNetwork net) {
 		return 0;
 	}

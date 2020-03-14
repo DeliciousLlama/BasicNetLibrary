@@ -6,6 +6,8 @@ import com.util.NeuralNetwork;
 import com.util.Node;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Execute {
 	
@@ -18,6 +20,26 @@ public class Execute {
 		//define activation
 		
 //		Activation function = x -> {return x;};
+		int[][] inputs = {
+			{108,90,61},
+			{156,62,54},
+			{198,95,118},
+			{63,247,13},
+			{56,37,233}};
+		ArrayList<ArrayList<Integer>> input = new ArrayList<ArrayList<Integer>>();
+		for(int i = 0; i < inputs.length; i++) {
+			for(int j = 0; i < inputs[i].length; i++) {
+				
+			}
+		}
+		
+		int[][] outputs = {
+			{1},
+			{1},
+			{1},
+			{0},
+			{1}};
+		
 		NeuralNetwork net = new NeuralNetwork();
 		net.buildInput(3);
 		net.addHidden(60, Activation.identity);
