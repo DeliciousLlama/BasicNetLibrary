@@ -6,8 +6,6 @@ import com.util.NeuralNetwork;
 import com.util.Node;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Execute {
 	
@@ -19,18 +17,21 @@ public class Execute {
 	public static void main(String[] args) {
 		//define activation
 		
-//		Activation function = x -> {return x;};
+		ArrayList<ArrayList<Float>> input;
+		ArrayList<ArrayList<Float>> output;
 		int[][] inputs = {
 			{108,90,61},
 			{156,62,54},
 			{198,95,118},
 			{63,247,13},
 			{56,37,233}};
-		ArrayList<ArrayList<Integer>> input = new ArrayList<ArrayList<Integer>>();
-		for(int i = 0; i < inputs.length; i++) {
-			for(int j = 0; i < inputs[i].length; i++) {
-				
+		input = new ArrayList<ArrayList<Float>>();
+		for(int i = 0; i < inputs.length; i++) {			
+			ArrayList<Float> tempInput = new ArrayList<Float>();
+			for(int j = 0; j < inputs[i].length; j++) {
+				tempInput.add((float) inputs[i][j]);
 			}
+			input.add(tempInput);
 		}
 		
 		int[][] outputs = {
@@ -39,17 +40,25 @@ public class Execute {
 			{1},
 			{0},
 			{1}};
+		output = new ArrayList<ArrayList<Float>>();
+		for(int i = 0; i < outputs.length; i++) {
+			ArrayList<Float> tempOutput = new ArrayList<Float>();
+			for(int j = 0; j < outputs[i].length; j++) {
+				tempOutput.add((float) outputs[i][j]);
+			}
+			output.add(tempOutput);
+		}
 		
-		NeuralNetwork net = new NeuralNetwork();
+		NeuralNetwork net = new NeuralNetwork(input, output);
 		net.buildInput(3);
 		net.addHidden(60, Activation.identity);
 		net.addHidden(100, Activation.identity);
 		net.addHidden(70, Activation.identity);
 		net.buildOutput(2, Activation.identity);
 		
-		ArrayList<Float> inputs = new ArrayList<>();
+		ArrayList<Float> testInputs = new ArrayList<>();
 		for(int i = 0; i < 3; i++) {
-			inputs.add((float) (0 + Math.random() * (10 - 0)));
+			testInputs.add((float) (0 + Math.random() * (10 - 0)));
 		}
 		
 		try {
@@ -57,7 +66,7 @@ public class Execute {
 		} catch (InvalidStructureException e) {
 			e.printStackTrace();
 		}
-		net.computeNetwork(inputs);
+		net.computeNetwork(testInputs);
 		
 		System.out.println("Mode: Testing / NeuralNet ID: ["+net.toString()+"]\n----------");
 		System.out.println("Output nodes:\nbias\t|\toutput(dec)\n=====");

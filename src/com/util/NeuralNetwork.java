@@ -3,9 +3,7 @@ package com.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class NeuralNetwork{
@@ -144,10 +142,10 @@ public class NeuralNetwork{
 	public float train(int epochs) {
 		//run all the inputs and compute the error
 		for(int a = 0; a < epochs; a++) {
-			//0. scramble data	(done)
-			//1. compute		(done)
-			//2. get error		(done)
-			//3. modify			(In Progress)
+			//0. scramble data											(done)
+			//1. compute												(done)
+			//2. get error												(done)
+			//3. modify(stochastic or batch gradient decent)			(In Progress)
 			
 			//scramble
 			ArrayList<ArrayList<Float>> inputSets = new ArrayList<>();
